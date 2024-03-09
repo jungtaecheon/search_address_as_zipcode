@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>郵便番号で住所検索</title>
   </head>
   <body>
-    <h1 id="reslut" class="reslut">test</h1>
+    <h1 id="result" class="result">郵便番号を入力してください</h1>
     <input id="number" type="text" placeholder="郵便番号" />
     <input type="button" value="検索" onclick="request_search_api()" />
     <div id="loading" style="display: none">ローディング中...</div>
@@ -29,18 +29,22 @@
         })
         .then((data) => {
           if (data.results) {
-            document.getElementById("reslut").innerHTML =
+            document.getElementById("result").innerHTML =
+              data.results[0].kana1 +
+              data.results[0].kana2 +
+              data.results[0].kana3 +
+              "<br>" +
               data.results[0].address1 +
               data.results[0].address2 +
               data.results[0].address3;
           } else {
-            document.getElementById("reslut").innerHTML =
+            document.getElementById("result").innerHTML =
               "該当する住所が見つかりません";
           }
         })
         .catch((error) => {
           console.error("Error:", error);
-          document.getElementById("reslut").innerHTML = "エラーが発生しました";
+          document.getElementById("result").innerHTML = "エラーが発生しました";
         })
         .finally(() => {
           // ローディング状態を非表示
