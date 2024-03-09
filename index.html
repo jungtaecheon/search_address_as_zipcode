@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1 id="reslut" class="reslut">test</h1>
+    <input id="number" type="text" placeholder="郵便番号" />
+    <input type="button" value="検索" onclick="request_search_api()" />
+    <div id="loading" style="display: none">ローディング中...</div>
+  </body>
+  <script>
+    //APIリクエストする
+    function request_search_api() {
+      const number = document.getElementById("number").value;
+      const loadingElement = document.getElementById("loading");
+      // ローディング状態を表示
+      loadingElement.style.display = "block";
+
+      /** 公式サイト : https://zipcloud.ibsnet.co.jp/ */
+      fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${number}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("ネットワークレスポンスが不正です。");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.results) {
+            document.getElementById("reslut").innerHTML =
+              data.results[0].address1 +
+              data.results[0].address2 +
+              data.results[0].address3;
+          } else {
+            document.getElementById("reslut").innerHTML =
+              "該当する住所が見つかりません";
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          document.getElementById("reslut").innerHTML = "エラーが発生しました";
+        })
+        .finally(() => {
+          // ローディング状態を非表示
+          loadingElement.style.display = "none";
+        });
+    }
+  </script>
+</html>
